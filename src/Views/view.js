@@ -1,4 +1,4 @@
-export { view };
+export { callView };
 
 function view() {
   const displayMessage = function (message) {
@@ -19,3 +19,5 @@ function view() {
 
   return { displayMessage, displayList, displayLists };
 }
+
+const callView = view();

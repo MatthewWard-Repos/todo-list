@@ -1,4 +1,4 @@
-export { model };
+export { callModel };
 
 function model() {
   const lists = [];
@@ -19,3 +19,4 @@ function model() {
 
   return { lists, List, Item };
 }
+const callModel = model();
