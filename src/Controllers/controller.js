@@ -77,6 +77,7 @@ function controller() {
 }
 
 const callController = controller();
+callView.displayPage();
 
 callController.linkNewList("My To-Do List");
 callController.linkNewList("My Wish List");
