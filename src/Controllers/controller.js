@@ -78,6 +78,10 @@ function controller() {
 
 const callController = controller();
 callView.displayPage();
+callView.addGlobalEventListener("click", "div", (e) => {
+  console.log(e.target);
+  return callView.displayItems(callModel.lists[1].items);
+});
 
 callController.linkNewList("My To-Do List");
 callController.linkNewList("My Wish List");
@@ -90,3 +94,5 @@ callController.linkItemDueDate(callController.readListItem(1, 0), 2025, 12, 25);
 
 callView.displayMessage(callModel.lists);
 callView.displayLists(callModel.lists);
+callView.displayMessage(callModel.lists[0].items);
+callView.displayItems(callModel.lists[0].items);

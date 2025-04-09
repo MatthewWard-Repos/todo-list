@@ -1,26 +1,8 @@
 export { callView };
 
 function view() {
-  const displayMessage = function (message) {
+  const displayMessage = (message) => {
     return console.log(message);
-  };
-  const displayList = function (list) {
-    displayMessage(list.name);
-    list.items.forEach((element) => {
-      displayMessage(`-${element.name}`);
-    });
-    displayMessage("");
-  };
-  const displayLists = function (lists) {
-    lists.forEach((element) => {
-      displayList(element);
-    });
-  };
-  const displayProps = function (item) {
-    Object.entries(item).forEach(([key, val]) => {
-      displayMessage(`${key}: ${val}`);
-    });
-    displayMessage("");
   };
 
   const createDiv = () => {
@@ -45,7 +27,46 @@ function view() {
     sidebar.lastChild.classList.add("lists");
   };
 
-  return { displayMessage, displayList, displayLists, displayProps, displayPage };
+  const displayName = (parent, obj) => {
+    parent.appendChild(createDiv());
+    parent.lastChild.textContent = obj.name;
+    parent.lastChild.setAttribute("index", obj.index);
+  };
+  const displayLists = (lists) => {
+    const allLists = document.querySelector(".lists");
+    lists.forEach((list) => {
+      displayName(allLists, list);
+    });
+  };
+  const displayItems = (items) => {
+    const allItems = document.querySelector(".items");
+    items.forEach((item) => {
+      displayName(allItems, item);
+    });
+  };
+
+  const displayProps = (item) => {
+    Object.entries(item).forEach(([key, val]) => {
+      displayMessage(`${key}: ${val}`);
+    });
+    displayMessage("");
+  };
+
+  const addGlobalEventListener = (type, selector, callback) => {
+    document.addEventListener(type, function (e) {
+      if (e.target.matches(selector)) callback(e);
+    });
+  };
+
+  return {
+    displayMessage,
+    displayName,
+    displayLists,
+    displayItems,
+    displayProps,
+    displayPage,
+    addGlobalEventListener,
+  };
 }
 
 const callView = view();
