@@ -1,5 +1,6 @@
 html {
   margin: none;
+  box-sizing: border-box;
 }
 
 body {
@@ -11,7 +12,7 @@ body {
   min-height: 100%;
 
   display: grid;
-  grid-template-columns: 5;
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1;
 }
 .sidebar {
@@ -19,7 +20,25 @@ body {
   grid-column: 1/2;
   grid-row: 1/1;
 }
+.main-body {
+  padding-left: 5%;
+  grid-column: 2/6;
+}
 .items {
   background-color: white;
-  grid-column: 2/5;
+}
+.item {
+  background-color: white;
+}
+.list-input {
+  height: 1rem;
+}
+.btn-input-no {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1;
+  height: 1rem;
+}
+.hidden {
+  display: none;
 }

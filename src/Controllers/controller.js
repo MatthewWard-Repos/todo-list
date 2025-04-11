@@ -77,10 +77,27 @@ function controller() {
 }
 
 const callController = controller();
-callView.displayPage();
-callView.addGlobalEventListener("click", "div", (e) => {
-  console.log(e.target);
-  return callView.displayItems(callModel.lists[1].items);
+
+// callView.displayPage();
+
+callView.addGlobalEventListener("click", "list", (e) => {
+  callView.deleteChildDivs(document.querySelector(".items"));
+  callView.displayItems(callModel.lists[e.target.getAttribute("index")].items);
+});
+
+callView.addGlobalEventListener("click", "btn-list", (e) => {
+  callView.toggleHidden(callView.getListForm());
+});
+callView.addGlobalEventListener("submit", "list-form", (e) => {
+  e.preventDefault();
+  console.log(e.target.classList);
+  if (e.target.classList.contains("btn-input-yes")) {
+    callController.linkNewList(callView.getListInput().value);
+  }
+  callView.toggleHidden(callView.getListForm());
+  callView.getListForm().reset();
+  callView.deleteChildDivs(callView.getAllLists());
+  callView.displayLists(callModel.lists);
 });
 
 callController.linkNewList("My To-Do List");

@@ -9,6 +9,29 @@
     <title>Todo-List</title>
   </head>
   <body>
-    <div class="container"></div>
+    <div class="container">
+      <div class="sidebar">
+        <div class="lists"></div>
+        <button class="btn-list">Add List</button>
+        <form class="hidden list-form">
+          <input
+            class="list-input"
+            type="text"
+            placeholder="My To-Do List..."
+          />
+          <button
+            class="btn-input-yes"
+            type="submit"
+          >
+            ✓</button
+          ><button class="btn-input-no">𐄂</button>
+        </form>
+      </div>
+
+      <div class="main-body">
+        <div class="items"></div>
+        <button class="btn-item">Add Item</button>
+      </div>
+    </div>
   </body>
 </html>
