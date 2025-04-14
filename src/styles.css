@@ -16,7 +16,7 @@ body {
   grid-template-rows: 1;
 }
 .sidebar {
-  background-color: lightgrey;
+  background-color: rgb(237 236 235);
   grid-column: 1/2;
   grid-row: 1/1;
 }

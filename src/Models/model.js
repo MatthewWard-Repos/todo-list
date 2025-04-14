@@ -1,30 +1,29 @@
-export { callModel };
+export { model };
 
-function model() {
-  const lists = [];
+const model = {
+  lists: [],
 
-  class List {
-    constructor(name) {
+  List: class List {
+    constructor(name, items = [], data = {}) {
       this.name = name;
-      this.items = [];
+      this.items = items;
+      Object.assign(this, data);
     }
-  }
+  },
 
-  class Item {
-    constructor(name = null) {
+  Item: class Item {
+    constructor(name = null, data = {}) {
       this.name = name;
       this.complete = false;
+      Object.assign(this, data);
     }
-  }
+  },
 
-  const createProp = {
+  createProp: {
     property(property, value) {
       this[`${property}`] = value;
     },
-  };
-  Object.assign(List.prototype, createProp);
-  Object.assign(Item.prototype, createProp);
-
-  return { lists, List, Item };
-}
-const callModel = model();
+  },
+};
+Object.assign(model.List.prototype, model.createProp);
+Object.assign(model.Item.prototype, model.createProp);
