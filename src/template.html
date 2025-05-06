@@ -36,6 +36,44 @@
       <div class="main-body">
         <div class="items"></div>
         <button class="btn-item">Add Item</button>
+        <form class="hidden item-form">
+          <div>
+            <input
+              class="item-name-input"
+              type="text"
+              placeholder="Name..."
+            />
+            <input
+              class="item-date-input"
+              type="datetime-local"
+            />
+            <label for="priority">Priority:</label>
+            <select name="priority">
+              <option value="low">Low</option>
+              <option value="middle">Middle</option>
+              <option value="high">High</option>
+            </select>
+
+            <button
+              class="btn-item-input-yes"
+              type="submit"
+            >
+              ✓</button
+            ><button
+              class="btn-item-input-no"
+              type="button"
+            >
+              𐄂
+            </button>
+          </div>
+          <div class="item-desc">
+            <textarea
+              class="item-desc-input"
+              type="text"
+              placeholder="Description..."
+            ></textarea>
+          </div>
+        </form>
       </div>
     </div>
   </body>

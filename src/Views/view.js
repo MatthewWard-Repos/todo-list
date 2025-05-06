@@ -27,14 +27,9 @@ const view = {
     });
   },
 
-  getListForm() {
-    const listform = document.querySelector(".list-form");
-    return listform;
-  },
-
-  getListInput() {
-    const listInput = document.querySelector(".list-input");
-    return listInput;
+  getElement(selector) {
+    const element = document.querySelector(selector);
+    return element;
   },
 
   displayItems(items) {

@@ -64,40 +64,54 @@ const controller = {
 };
 
 const eventListeners = {
+  listForm: view.getElement(".list-form"),
+  listInput: view.getElement(".list-input"),
+
   listenList() {
     view.addGlobalEventListener("click", "list", (e) => {
-      view.deleteChildDivs(document.querySelector(".items"));
+      view.deleteChildDivs(view.getElement(".items"));
       view.displayItems(model.lists[e.target.getAttribute("index")].items);
     });
   },
 
-  listenOpenForm() {
+  listenOpenListForm() {
     view.addGlobalEventListener("click", "btn-list", (e) => {
-      view.toggleHidden(view.getListForm());
+      view.toggleHidden(this.listForm);
+      this.listInput.focus();
+      view.toggleHidden(view.getElement(".btn-list"));
     });
   },
   listenAddList() {
     view.addGlobalEventListener("submit", "list-form", (e) => {
       e.preventDefault();
-      controller.linkNewList(view.getListInput().value);
-      view.toggleHidden(view.getListForm());
-      view.getListForm().reset();
-      view.deleteChildDivs(view.getAllLists());
+      controller.linkNewList(this.listInput.value);
+      view.toggleHidden(this.listForm);
+      this.listForm.reset();
+      view.deleteChildDivs(view.getElement(".lists"));
       view.displayLists(model.lists);
+      view.toggleHidden(view.getElement(".btn-list"));
     });
   },
   listenCloseList() {
     view.addGlobalEventListener("click", "btn-input-no", (e) => {
-      console.log(e.target);
-      view.toggleHidden(view.getListForm());
-      view.getListForm().reset();
+      view.toggleHidden(this.listForm);
+      this.listForm.reset();
+      view.toggleHidden(view.getElement(".btn-list"));
+    });
+  },
+  listenOpenItemForm() {
+    view.addGlobalEventListener("click", "btn-item", (e) => {
+      view.toggleHidden(view.getElement(".btn-item"));
+      view.toggleHidden(view.getElement(".item-form"));
+      view.getElement(".item-name-input").focus();
     });
   },
   listenAll() {
     this.listenList();
-    this.listenOpenForm();
+    this.listenOpenListForm();
     this.listenAddList();
     this.listenCloseList();
+    this.listenOpenItemForm();
   },
 };
 eventListeners.listenAll();
