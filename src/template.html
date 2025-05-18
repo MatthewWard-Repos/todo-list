@@ -28,7 +28,7 @@
             class="btn-input-no"
             type="button"
           >
-            𐄂
+            X
           </button>
         </form>
       </div>
@@ -37,7 +37,7 @@
         <div class="items"></div>
         <button class="btn-item">Add Item</button>
         <form class="hidden item-form">
-          <div>
+          <div class="item-prop-input">
             <input
               class="item-name-input"
               type="text"
@@ -47,10 +47,17 @@
               class="item-date-input"
               type="datetime-local"
             />
-            <label for="priority">Priority:</label>
-            <select name="priority">
+            <label
+              for="priority"
+              class="item-priority-label"
+              >Priority:</label
+            >
+            <select
+              name="priority"
+              class="item-priority-input"
+            >
               <option value="low">Low</option>
-              <option value="middle">Middle</option>
+              <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
 
@@ -63,12 +70,12 @@
               class="btn-item-input-no"
               type="button"
             >
-              𐄂
+              X
             </button>
           </div>
-          <div class="item-desc">
+          <div class="item-desc-input">
             <textarea
-              class="item-desc-input"
+              class="item-desc-textarea"
               type="text"
               placeholder="Description..."
             ></textarea>
