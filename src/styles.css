@@ -1,6 +1,17 @@
+@font-face {
+  font-family: "Roboto-Light";
+  src: url(fonts/Roboto-Light.ttf) format("ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Roboto-Light", sans-serif;
+}
+
 html {
   margin: none;
-  box-sizing: border-box;
 }
 
 body {
@@ -8,44 +19,182 @@ body {
   min-height: 100vh;
   height: 100vh;
 }
+
+img {
+  width: 1rem;
+  height: 1rem;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+}
 .container {
   min-height: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1;
+  grid-template-rows: 1fr 2rem;
 }
 .sidebar {
-  padding: 5%;
+  padding: 5vh 5%;
   background-color: rgb(237 236 235);
   grid-column: 1/2;
-  grid-row: 1/1;
+  grid-row: 1/3;
 }
 .main-body {
-  padding: 5%;
+  padding: 5vh 5%;
+  grid-row: 1/2;
   grid-column: 2/6;
 }
+.footer {
+  display: flex;
+  justify-content: center;
+  grid-row: 2/3;
+  grid-column: 2/6;
+}
+
+.attribution {
+  color: lightgray;
+  font-size: 1rem;
+}
+
+a.attribution:hover {
+  color: darkgray;
+}
+
+.lists {
+  margin: 2vh 0;
+}
+
 .list {
   display: grid;
+  margin: 2vh 0%;
   grid-template-rows: 1;
-  grid-template-columns: 2;
+  grid-template-columns: 4fr 1fr;
+  border-bottom: solid 1px transparent;
+}
+.list:hover {
+  border-bottom: solid 1px white;
 }
 .list-name {
   grid-column: 1/2;
   grid-row: 1/1;
+}
+.list-form {
+  display: grid;
+  max-width: 100%;
+  grid-template-rows: 1;
+  grid-template-columns: 3fr 1fr;
+}
+
+.list-input {
+  height: 1rem;
+  max-width: 75%;
+  grid-column: 1/2;
+}
+.btn-input-yes {
+  grid-row: 1/2;
+  grid-column: 2/3;
+}
+.btn-input-no {
+  grid-row: 1/2;
+  grid-column: 3/4;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1;
+  height: 1rem;
 }
 .items {
   background-color: white;
 }
 .item {
   display: grid;
+  margin: 2vh 0%;
+  grid-template-rows: 1;
+  grid-template-columns: 4fr 1fr;
   width: 67%;
-  grid-template-columns: 3;
-  grid-template-rows: 2;
   background-color: white;
+  border-radius: 5%;
+  border-bottom: solid 1px transparent;
+}
+.item:hover {
+  border-bottom: solid 1px rgb(237 236 235);
+}
+
+.btn-open {
+  display: flex;
+  gap: 5px;
+  justify-content: start;
+  margin: 1vh 0;
+  padding-left: 0;
+  padding-bottom: 3px;
+  border-bottom: solid 1px transparent;
+}
+.btn-open.btn-list {
+  width: 100%;
+}
+.btn-open:hover {
+  /* background-color: lightgray; */
+  border-bottom: solid 1px white;
+}
+.btn-item.btn-open:hover {
+  border-bottom: solid 1px rgb(237 236 235);
+}
+.btn-edit-yes,
+.btn-input-yes {
+  height: 1.1rem;
+  width: 1.1rem;
+}
+.btn-edit-yes:hover,
+.btn-input-yes:hover {
+  font-size: 1.1rem;
+  transform: translate(-1px, -3px);
 }
 
 .edit-delete {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   grid-column: 2/3;
+  max-width: 100%;
+  max-height: 110%;
+  height: 1.1rem;
+}
+.edit {
+  height: 1.1rem;
+  width: 1.1rem;
+  max-width: 100%;
+  margin-right: 5px;
+}
+.delete {
+  height: 1.1rem;
+  width: 1.1rem;
+  max-width: 100%;
+  padding: 3%;
+  margin-left: 5px;
+}
+
+.submit-cancel {
+  display: flex;
+  align-items: center;
+  height: 1.1rem;
+}
+
+.edit:hover {
+  /* background-color: lightgray;
+  border-radius: 50%; */
+  transform: translate(-1px, -3px);
+  font-size: 1.1rem;
+}
+.btn-input-no:hover,
+.btn-edit-no:hover {
+  font-size: 1.1rem;
+  transform: translate(-1px, -1px);
+}
+.delete:hover {
+  /* font-weight: bold; */
+  transform: translate(0, -3px);
+  font-size: 1.1rem;
 }
 
 .item-name {
@@ -74,31 +223,38 @@ body {
   background-color: red;
 }
 
-.list-input {
-  height: 1rem;
-}
-.btn-input-no {
-  text-align: center;
-  vertical-align: middle;
-  line-height: 1;
-  height: 1rem;
-}
 .item-form {
   display: grid;
-  width: 50%;
+  min-width: fit-content;
+  height: fit-content;
   gap: 10px;
   grid-template-columns: 1;
   grid-template-rows: 2;
+  border: 1px solid lightgray;
+  border-radius: 1%;
 }
 
 .item-prop-input {
+  min-width: fit-content;
   grid-row: 1/2;
   display: grid;
   grid-template-columns: 5;
   grid-template-rows: 1;
   gap: 1%;
+  padding: 3px;
+}
+.item-desc-input {
+  padding: 3px;
+  max-width: 100%;
+  height: fit-content;
+}
+.item-desc-textarea {
+  min-width: 99%;
+  max-width: 99%;
+  max-height: 100%;
 }
 .item-name-input {
+  width: fit-content;
   grid-column: 1/2;
   grid-row: 1/2;
 }
@@ -117,7 +273,7 @@ body {
 .btn-item-input-yes {
   grid-column: 5/6;
 }
-.btn-item-input-no {
+.item-form .btn-input-no {
   grid-column: 6/7;
 }
 .item-desc-textarea {

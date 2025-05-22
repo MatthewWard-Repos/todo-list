@@ -60,10 +60,12 @@ const view = {
     });
     displayMessage("");
   },
+
   displayItemProp(item, data, property) {
     item.appendChild(this.createDiv());
     item.lastChild.textContent = `${data}`;
     item.lastChild.classList.add(`"item-${property}`);
+    item.lastChild.classList.add(`item-prop`);
   },
   displayItemProps(item, data) {
     item.textContent = "";
@@ -72,6 +74,8 @@ const view = {
     this.displayItemProp(item, data.dueDate, "date");
     this.displayItemProp(item, data.priority, "priority");
     this.displayItemProp(item, data.description, "desc");
+    this.createEditDeleteBtn(item);
+    // this.toggleHidden(item.lastChild);
   },
 
   deleteChildDivs(parent) {
@@ -111,6 +115,7 @@ const view = {
   },
   createSubmitCancel(parent) {
     let submitCancel = parent.appendChild(this.createDiv());
+    submitCancel.classList.add("submit-cancel");
     submitCancel.appendChild(this.createBtn("✓", "btn-edit-yes", "submit"));
     submitCancel.appendChild(this.createBtn("X", "btn-edit-no", "button"));
   },

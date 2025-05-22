@@ -78,6 +78,18 @@ const eventListeners = {
   itemDesc: view.getElement(".item-desc-textarea"),
   curName: null,
 
+  openForm(formType, btnType, focusOn) {
+    view.toggleHidden(view.getElement(`.btn-${btnType}`));
+    view.toggleHidden(formType);
+    focusOn.focus();
+  },
+
+  closeForm(formType, btnType) {
+    view.toggleHidden(formType);
+    formType.reset();
+    view.toggleHidden(view.getElement(`.btn-${btnType}`));
+  },
+
   listenList() {
     view.addGlobalEventListener("click", "list-name", (e) => {
       this.activeList = e.target.getAttribute("index");
@@ -86,40 +98,34 @@ const eventListeners = {
     });
   },
 
-  listenOpenListForm() {
-    view.addGlobalEventListener("click", "btn-list", (e) => {
-      view.toggleHidden(this.listForm);
-      this.listInput.focus();
-      view.toggleHidden(view.getElement(".btn-list"));
+  listenOpenForm() {
+    view.addGlobalEventListener("click", "btn-open", (e) => {
+      if (e.target.closest(".sidebar")) {
+        this.openForm(this.listForm, "list", this.listInput);
+      } else if (model.lists.length > 0) {
+        this.openForm(this.itemForm, "item", this.itemName);
+      }
     });
   },
   listenAddList() {
     view.addGlobalEventListener("submit", "list-form", (e) => {
       e.preventDefault();
       controller.linkNewList(this.listInput.value);
-      view.toggleHidden(this.listForm);
-      this.listForm.reset();
+      this.closeForm(this.listForm, "list");
       view.deleteChildDivs(view.getElement(".lists"));
       view.displayLists(model.lists);
-      view.toggleHidden(view.getElement(".btn-list"));
     });
   },
-  listenCloseList() {
+  listenCloseForm() {
     view.addGlobalEventListener("click", "btn-input-no", (e) => {
-      view.toggleHidden(this.listForm);
-      this.listForm.reset();
-      view.toggleHidden(view.getElement(".btn-list"));
-    });
-  },
-  listenOpenItemForm() {
-    view.addGlobalEventListener("click", "btn-item", (e) => {
-      if (model.lists.length > 0) {
-        view.toggleHidden(view.getElement(".btn-item"));
-        view.toggleHidden(view.getElement(".item-form"));
-        view.getElement(".item-name-input").focus();
+      if (e.target.closest(".sidebar")) {
+        this.closeForm(this.listForm, "list");
+      } else {
+        this.closeForm(this.itemForm, "item");
       }
     });
   },
+
   listenAddItem() {
     view.addGlobalEventListener("submit", "item-form", (e) => {
       e.preventDefault();
@@ -143,49 +149,24 @@ const eventListeners = {
         this.itemDesc.value
       );
 
-      this.itemForm.reset();
-      view.toggleHidden(view.getElement(".btn-item"));
-      view.toggleHidden(view.getElement(".item-form"));
+      this.closeForm(this.itemForm, "item");
       view.deleteChildDivs(view.getElement(".items"));
       view.displayItems(model.lists[this.activeList].items);
     });
   },
-  listenCloseItemForm() {
-    view.addGlobalEventListener("click", "btn-item-input-no", (e) => {
-      view.toggleHidden(this.itemForm);
-      this.itemForm.reset();
-      view.toggleHidden(view.getElement(".btn-item"));
-    });
-  },
-  // listenClickOutForm(form, callback) {
-  //   document.addEventListener("click", (e) => {
-  //     if (!form.contains(e.target)) {
-  //       callback();
-  //     }
-  //   });
-  // },
+
   listenOpenItem() {
     view.addGlobalEventListener("click", "item-name", (e) => {
-      console.log("test");
       view.displayItemProps(
-        e.target,
+        e.target.parentElement,
         model.lists[this.activeList].items[e.target.getAttribute("index")]
       );
-      console.log(e.target);
-      console.log(model.lists[this.activeList].items[e.target.getAttribute("index")]);
     });
   },
-  // listenCloseItem(){
-
-  // }
-  listenHover() {
-    view.addGlobalEventListener("mouseover", "list", (e) => {
-      console.log(e.target);
-      let hoveredList = e.target.parentElement;
-      view.toggleHidden(e.target.parentElement.children[1]);
-      // view.addGlobalEventListener("mouseout", "list", (e) => {
-      //   view.toggleHidden(e.target.childNodes[1]);
-      // });
+  listenCloseItem() {
+    view.addGlobalEventListener("click", "item-prop", (e) => {
+      view.deleteChildDivs(e.target.closest(".items"));
+      view.displayItems(model.lists[this.activeList].items);
     });
   },
 
@@ -209,45 +190,55 @@ const eventListeners = {
   },
   listenEdit() {
     view.addGlobalEventListener("click", "edit", (e) => {
+      let targetName = e.target.parentElement.parentElement;
       if (e.target.closest(".list")) {
-        let targetList = e.target.closest(".list");
-        this.curName = model.lists[targetList.getAttribute("index")].name;
-        view.deleteChildDivs(targetList);
-        view.createListInput(targetList);
-        targetList.firstChild.value = this.curName;
-        targetList.firstChild.focus();
-        view.createSubmitCancel(targetList);
+        this.curName = model.lists[targetName.getAttribute("index")].name;
+      } else {
+        this.curName = model.lists[this.activeList].items[targetName.getAttribute("index")].name;
       }
+      view.deleteChildDivs(targetName);
+      view.createListInput(targetName);
+      targetName.firstChild.value = this.curName;
+      targetName.firstChild.focus();
+      view.createSubmitCancel(targetName);
     });
   },
   listenSubmit() {
     view.addGlobalEventListener("click", "btn-edit-yes", (e) => {
-      let targetList = e.target.closest(".list");
-      model.lists[targetList.getAttribute("index")].name =
-        targetList.closest(".list").firstChild.value;
-      view.deleteChildDivs(targetList.parentElement);
-      view.displayLists(model.lists);
-      console.log(model.lists);
+      let targetName = e.target.parentElement.parentElement;
+      if (e.target.closest(".list")) {
+        model.lists[targetName.getAttribute("index")].name =
+          targetName.closest(".list").firstChild.value;
+        view.deleteChildDivs(targetName.parentElement);
+        view.displayLists(model.lists);
+      } else {
+        model.lists[this.activeList].items[targetName.getAttribute("index")].name =
+          targetName.closest(".item").firstChild.value;
+        view.deleteChildDivs(targetName.parentElement);
+        view.displayItems(model.lists[this.activeList].items);
+      }
     });
   },
   listenCancelEdit() {
     view.addGlobalEventListener("click", "btn-edit-no", (e) => {
-      let listsContainer = e.target.closest(".lists");
-      view.deleteChildDivs(listsContainer);
-      view.displayLists(model.lists);
+      let targetName = e.target.parentElement.parentElement;
+      if (e.target.closest(".list")) {
+        view.deleteChildDivs(targetName.parentElement);
+        view.displayLists(model.lists);
+      } else {
+        view.deleteChildDivs(targetName.parentElement);
+        view.displayItems(model.lists[this.activeList].items);
+      }
     });
   },
   listenAll() {
     this.listenList();
-    this.listenOpenListForm();
+    this.listenOpenForm();
     this.listenAddList();
-    this.listenCloseList();
-    this.listenOpenItemForm();
+    this.listenCloseForm();
     this.listenAddItem();
-    this.listenCloseItemForm();
-    // this.listenClickOutForm(this.listForm, () => view.toggleHidden(this.listForm));
     this.listenOpenItem();
-    // this.listenHover();
+    this.listenCloseItem();
     this.listenDelete();
     this.listenEdit();
     this.listenSubmit();

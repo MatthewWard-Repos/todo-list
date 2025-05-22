@@ -12,30 +12,46 @@
     <div class="container">
       <div class="sidebar">
         <div class="lists"></div>
-        <button class="btn-list">Add List</button>
+        <button class="btn-open btn-list">
+          <img
+            src="img/plus.png"
+            alt="+"
+            loading="lazy"
+          />
+          Add List
+        </button>
         <form class="hidden list-form">
           <input
             class="list-input"
             type="text"
             placeholder="My To-Do List..."
           />
-          <button
-            class="btn-input-yes"
-            type="submit"
-          >
-            ✓</button
-          ><button
-            class="btn-input-no"
-            type="button"
-          >
-            X
-          </button>
+          <div class="submit-cancel">
+            <button
+              class="btn-input-yes"
+              type="submit"
+            >
+              ✓</button
+            ><button
+              class="btn-input-no"
+              type="button"
+            >
+              X
+            </button>
+          </div>
         </form>
       </div>
 
       <div class="main-body">
         <div class="items"></div>
-        <button class="btn-item">Add Item</button>
+
+        <button class="btn-open btn-item">
+          <img
+            src="img/plus.png"
+            alt="+"
+            loading="lazy"
+          />Add Item
+        </button>
         <form class="hidden item-form">
           <div class="item-prop-input">
             <input
@@ -60,18 +76,19 @@
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
-
-            <button
-              class="btn-item-input-yes"
-              type="submit"
-            >
-              ✓</button
-            ><button
-              class="btn-item-input-no"
-              type="button"
-            >
-              X
-            </button>
+            <div class="submit-cancel">
+              <button
+                class="btn-input-yes"
+                type="submit"
+              >
+                ✓</button
+              ><button
+                class="btn-input-no"
+                type="button"
+              >
+                X
+              </button>
+            </div>
           </div>
           <div class="item-desc-input">
             <textarea
@@ -81,6 +98,24 @@
             ></textarea>
           </div>
         </form>
+      </div>
+      <div class="footer">
+        <div class="attribution">
+          Icon made by
+          <a
+            class="attribution"
+            href="https://www.flaticon.com/authors/sakurai"
+            title="create icons"
+            >Sakurai</a
+          >
+          from
+          <a
+            class="attribution"
+            href="https://www.flaticon.com"
+            title="Flaticon"
+            >Flaticon</a
+          >
+        </div>
       </div>
     </div>
   </body>
