@@ -189,11 +189,14 @@ const eventListeners = {
     });
   },
   listenEdit() {
-    view.addGlobalEventListener("click", "edit", (e) => {
-      let targetName = e.target.parentElement.parentElement;
+    view.addGlobalEventListener("click", "edit-img", (e) => {
+      let targetName = null;
+
       if (e.target.closest(".list")) {
+        targetName = e.target.closest(".list");
         this.curName = model.lists[targetName.getAttribute("index")].name;
       } else {
+        targetName = e.target.closest(".item");
         this.curName = model.lists[this.activeList].items[targetName.getAttribute("index")].name;
       }
       view.deleteChildDivs(targetName);

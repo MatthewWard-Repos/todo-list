@@ -1,3 +1,5 @@
+import pencilImg from "../img/pencil.png";
+
 export { view };
 
 const view = {
@@ -70,6 +72,8 @@ const view = {
   displayItemProps(item, data) {
     item.textContent = "";
     item.classList.add(`${data.priority}`);
+    item.classList.add("item-open");
+    item.classList.remove("item");
     this.displayItemProp(item, data.name, "name");
     this.displayItemProp(item, data.dueDate, "date");
     this.displayItemProp(item, data.priority, "priority");
@@ -104,9 +108,13 @@ const view = {
       view.toggleHidden(e.target.querySelector(".edit-delete"));
     });
     let newDiv = parent.appendChild(this.createDiv());
+    let image = document.createElement("img");
+    image.src = pencilImg;
+    image.classList.add("edit-img");
     newDiv.classList.add("edit-delete");
     newDiv.classList.add("hidden");
-    newDiv.appendChild(this.createBtn("✏️", "edit"));
+    newDiv.appendChild(this.createBtn("", "edit"));
+    newDiv.lastChild.appendChild(image);
     newDiv.appendChild(this.createBtn("X", "delete"));
   },
   createListInput(parent) {
