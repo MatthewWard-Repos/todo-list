@@ -4,6 +4,23 @@ import "../styles.css";
 import { format } from "date-fns";
 
 const controller = {
+  getLocalStorage() {
+    if (
+      localStorage.getItem("lists-local") &&
+      JSON.parse(localStorage.getItem("lists-local")).length !== 0
+    ) {
+      JSON.parse(localStorage.getItem("lists-local")).forEach((list) => {
+        model.lists.push(list);
+      });
+    } else {
+      localStorage.setItem("lists-local", JSON.stringify(model.lists));
+      model.demoLists.forEach((list) => {
+        model.lists.push(list);
+      });
+    }
+    view.render(model.lists);
+  },
+
   linkObjProp(obj, key, val) {
     obj.property(key, val);
   },
@@ -43,7 +60,7 @@ const controller = {
     this.linkObjProp(item, "description", desc);
   },
   linkItemDueDate(item, date) {
-    this.linkObjProp(item, "dueDate", format(new Date(date), "hh:mm dd/MM/yyyy"));
+    this.linkObjProp(item, "dueDate", format(new Date(date), "hh:mm dd LLL yyyy"));
   },
   linkItemPriority(item, priority) {
     this.linkObjProp(item, "priority", priority);
@@ -77,6 +94,14 @@ const eventListeners = {
   itemPriority: view.getElement(".item-priority-input"),
   itemDesc: view.getElement(".item-desc-textarea"),
   curName: null,
+
+  toggleEditDelete(parent) {
+    view.toggleHidden(parent.querySelector(".edit-delete"));
+  },
+  createHoverListener(parent) {
+    parent.addEventListener("mouseenter", (e) => eventListeners.toggleEditDelete(parent));
+    parent.addEventListener("mouseleave", (e) => eventListeners.toggleEditDelete(parent));
+  },
 
   openForm(formType, btnType, focusOn) {
     view.toggleHidden(view.getElement(`.btn-${btnType}`));
@@ -114,6 +139,7 @@ const eventListeners = {
       this.closeForm(this.listForm, "list");
       view.deleteChildDivs(view.getElement(".lists"));
       view.displayLists(model.lists);
+      localStorage.setItem("lists-local", JSON.stringify(model.lists));
     });
   },
   listenCloseForm() {
@@ -152,11 +178,15 @@ const eventListeners = {
       this.closeForm(this.itemForm, "item");
       view.deleteChildDivs(view.getElement(".items"));
       view.displayItems(model.lists[this.activeList].items);
+      localStorage.setItem("lists-local", JSON.stringify(model.lists));
     });
   },
 
   listenOpenItem() {
     view.addGlobalEventListener("click", "item-name", (e) => {
+      if (e.target.classList.contains("complete")) {
+        return;
+      }
       view.displayItemProps(
         e.target.parentElement,
         model.lists[this.activeList].items[e.target.getAttribute("index")]
@@ -164,7 +194,7 @@ const eventListeners = {
     });
   },
   listenCloseItem() {
-    view.addGlobalEventListener("click", "item-prop", (e) => {
+    view.addGlobalEventListener("click", "close", (e) => {
       view.deleteChildDivs(e.target.closest(".items"));
       view.displayItems(model.lists[this.activeList].items);
     });
@@ -186,27 +216,31 @@ const eventListeners = {
         view.deleteChildDivs(view.getElement(".items"));
         view.displayItems(model.lists[this.activeList].items);
       }
+      localStorage.setItem("lists-local", JSON.stringify(model.lists));
     });
   },
-  listenEdit() {
+  listenEditName() {
     view.addGlobalEventListener("click", "edit-img", (e) => {
       let targetName = null;
-
+      let type = null;
       if (e.target.closest(".list")) {
+        type = "list";
         targetName = e.target.closest(".list");
         this.curName = model.lists[targetName.getAttribute("index")].name;
       } else {
+        type = "item";
         targetName = e.target.closest(".item");
         this.curName = model.lists[this.activeList].items[targetName.getAttribute("index")].name;
       }
       view.deleteChildDivs(targetName);
       view.createListInput(targetName);
       targetName.firstChild.value = this.curName;
+      targetName.firstChild.classList.add(`${type}-input`);
       targetName.firstChild.focus();
       view.createSubmitCancel(targetName);
     });
   },
-  listenSubmit() {
+  listenSubmitEdit() {
     view.addGlobalEventListener("click", "btn-edit-yes", (e) => {
       let targetName = e.target.parentElement.parentElement;
       if (e.target.closest(".list")) {
@@ -220,6 +254,7 @@ const eventListeners = {
         view.deleteChildDivs(targetName.parentElement);
         view.displayItems(model.lists[this.activeList].items);
       }
+      localStorage.setItem("lists-local", JSON.stringify(model.lists));
     });
   },
   listenCancelEdit() {
@@ -234,6 +269,24 @@ const eventListeners = {
       }
     });
   },
+  listenChecked() {
+    view.addGlobalEventListener("change", "complete-toggle", (e) => {
+      let checkedItem =
+        model.lists[this.activeList].items[e.target.parentElement.getAttribute("index")];
+      if (checkedItem.complete) {
+        checkedItem.complete = false;
+        view.deleteChildDivs(e.target.closest(".items"));
+        view.displayItems(model.lists[this.activeList].items);
+      } else {
+        checkedItem.complete = true;
+        e.target.parentElement.removeChild(e.target.parentElement.lastChild);
+      }
+
+      view.toggleStruckThrough(e.target.parentElement.querySelector(".item-name"));
+
+      view.toggleStruckThrough(e.target.parentElement.querySelector(".due-date"));
+    });
+  },
   listenAll() {
     this.listenList();
     this.listenOpenForm();
@@ -243,34 +296,14 @@ const eventListeners = {
     this.listenOpenItem();
     this.listenCloseItem();
     this.listenDelete();
-    this.listenEdit();
-    this.listenSubmit();
+    this.listenEditName();
+    this.listenSubmitEdit();
     this.listenCancelEdit();
+    this.listenChecked();
   },
 };
 eventListeners.listenAll();
 
-const demoLists = () => {
-  controller.linkNewList("My To-Do List");
-  controller.linkNewList("My Wish List");
-  controller.linkNewItem("Go upstairs");
-  controller.linkItemDesc(controller.readListItem(0, 0), "...duh");
-  controller.linkItemDueDate(controller.readListItem(0, 0), Date.parse("May 15 2025 12:56:00"));
-  controller.linkItemPriority(controller.readListItem(0, 0), "low");
-  controller.linkNewItem("Go downstairs");
-  controller.linkItemDesc(controller.readListItem(0, 1), "...duh");
-  controller.linkItemDueDate(controller.readListItem(0, 1), Date.parse("May 15 2025 12:56:00"));
-  controller.linkItemPriority(controller.readListItem(0, 1), "low");
-  controller.linkNewItem("A puppy", 1);
-  controller.linkItemDesc(controller.readListItem(1, 0), "Labrador");
-  controller.linkItemDueDate(controller.readListItem(1, 0), Date.parse("May 15 2025 12:56:00"));
-  controller.linkItemPriority(controller.readListItem(1, 0), "high");
-};
-demoLists();
+export const { createHoverListener } = eventListeners;
 
-view.displayMessage(model.lists);
-view.displayLists(model.lists);
-view.displayMessage(model.lists[0].items);
-view.displayItems(model.lists[0].items);
-
-view.displayMessage(model.lists);
+controller.getLocalStorage();

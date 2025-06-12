@@ -1,8 +1,13 @@
 import pencilImg from "../img/pencil.png";
-
+import minimizeImg from "../img/minimize.png";
+import { createHoverListener } from "../Controllers/controller";
 export { view };
 
 const view = {
+  render(lists) {
+    this.displayLists(lists), this.displayItems(lists[0].items);
+  },
+
   displayMessage(message) {
     return console.log(message);
   },
@@ -22,13 +27,18 @@ const view = {
   },
 
   displayName(parent, obj, className) {
-    let listContainer = parent.appendChild(this.createDiv());
-    let listName = listContainer.appendChild(this.createDiv());
-    listContainer.classList.add(className);
-    listContainer.setAttribute("index", obj.index);
-    listName.textContent = obj.name;
-    listName.classList.add(`${className}-name`);
-    listName.setAttribute("index", obj.index);
+    let nameContainer = parent.appendChild(this.createDiv());
+    let objName = nameContainer.appendChild(this.createDiv());
+    nameContainer.classList.add(className);
+    nameContainer.setAttribute("index", obj.index);
+    objName.textContent = obj.name;
+    objName.classList.add(`${className}-name`);
+    objName.setAttribute("index", obj.index);
+    if (className === "item") {
+      nameContainer.appendChild(this.createDiv());
+      nameContainer.lastChild.classList.add("due-date");
+      nameContainer.lastChild.textContent = `Due: ${obj.dueDate}`;
+    }
 
     this.createEditDeleteBtn(parent.lastChild);
   },
@@ -53,6 +63,11 @@ const view = {
     const allItems = document.querySelector(".items");
     items.forEach((item) => {
       this.displayName(allItems, item, "item");
+      this.createCompleteInput(allItems.lastChild);
+      if (item.complete) {
+        this.toggleStruckThrough(allItems.lastChild);
+        allItems.lastChild.querySelector(".complete-toggle").checked = true;
+      }
     });
   },
 
@@ -65,7 +80,12 @@ const view = {
 
   displayItemProp(item, data, property) {
     item.appendChild(this.createDiv());
-    item.lastChild.textContent = `${data}`;
+    if (property === "priority") {
+      item.lastChild.textContent =
+        data.toString().toUpperCase().slice(0, 1) + data.toString().slice(1) + " Priority";
+    } else {
+      item.lastChild.textContent = `${data}`;
+    }
     item.lastChild.classList.add(`"item-${property}`);
     item.lastChild.classList.add(`item-prop`);
   },
@@ -77,9 +97,8 @@ const view = {
     this.displayItemProp(item, data.name, "name");
     this.displayItemProp(item, data.dueDate, "date");
     this.displayItemProp(item, data.priority, "priority");
+    this.createEditCloseButton(item);
     this.displayItemProp(item, data.description, "desc");
-    this.createEditDeleteBtn(item);
-    // this.toggleHidden(item.lastChild);
   },
 
   deleteChildDivs(parent) {
@@ -98,24 +117,40 @@ const view = {
     if (!element) {
       return;
     }
+
     element.classList.toggle("hidden");
   },
-  createEditDeleteBtn(parent) {
-    parent.addEventListener("mouseenter", function (e) {
-      view.toggleHidden(e.target.querySelector(".edit-delete"));
-    });
-    parent.addEventListener("mouseleave", function (e) {
-      view.toggleHidden(e.target.querySelector(".edit-delete"));
-    });
-    let newDiv = parent.appendChild(this.createDiv());
+  toggleStruckThrough(element) {
+    element.classList.toggle("complete");
+  },
+  createCompleteInput(parent) {
+    parent.prepend(this.createInput());
+    parent.firstChild.setAttribute("type", "checkbox");
+    parent.firstChild.classList.add("complete-toggle");
+  },
+
+  createImgBtn(div, className, imgName) {
     let image = document.createElement("img");
-    image.src = pencilImg;
+    image.src = imgName;
     image.classList.add("edit-img");
-    newDiv.classList.add("edit-delete");
-    newDiv.classList.add("hidden");
-    newDiv.appendChild(this.createBtn("", "edit"));
-    newDiv.lastChild.appendChild(image);
+    div.classList.add(`${className}`);
+    div.classList.add("hidden");
+    div.appendChild(this.createBtn("", "edit"));
+    div.lastChild.appendChild(image);
+  },
+
+  createEditDeleteBtn(parent) {
+    createHoverListener(parent);
+    let newDiv = parent.appendChild(this.createDiv());
+    this.createImgBtn(newDiv, "edit-delete", pencilImg);
     newDiv.appendChild(this.createBtn("X", "delete"));
+  },
+
+  createEditCloseButton(parent) {
+    let newDiv = parent.appendChild(this.createDiv());
+    this.createImgBtn(newDiv, "edit-close", pencilImg);
+    this.createImgBtn(newDiv, "edit-close", minimizeImg);
+    newDiv.classList.remove("hidden");
   },
   createListInput(parent) {
     parent.appendChild(this.createInput());

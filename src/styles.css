@@ -47,17 +47,26 @@ button {
   min-height: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr 3rem;
+  grid-template-rows: 3rem 1fr 4rem;
+}
+.title {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  background-color: rgb(237 236 235);
+}
+.title h1 {
+  margin: 1vh;
+  color: white;
 }
 .sidebar {
-  padding: 5vh 5%;
+  padding: 2vh 5%;
   background-color: rgb(237 236 235);
   grid-column: 1/2;
-  grid-row: 1/3;
+  grid-row: 2/4;
 }
 .main-body {
-  padding: 5vh 5%;
-  grid-row: 1/2;
+  padding: 2vh 5%;
+  grid-row: 2/3;
   grid-column: 2/6;
 }
 .footer {
@@ -65,7 +74,7 @@ button {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  grid-row: 2/3;
+  grid-row: 3/4;
   grid-column: 2/6;
 }
 
@@ -79,12 +88,12 @@ a.attribution:hover {
 }
 
 .lists {
-  margin: 2vh 0;
+  margin-bottom: 2vh;
 }
 
 .list {
   display: grid;
-  margin: 2vh 0%;
+  margin-bottom: 2vh;
   grid-template-rows: 1;
   grid-template-columns: 75% 25%;
   border-bottom: solid 1px transparent;
@@ -110,11 +119,14 @@ a.attribution:hover {
   /* height: 1.1rem;
   width: 1.1rem; */
 }
-
+.item-input,
 .list-input {
-  height: 1rem;
-  /* max-width: 70%;
-  grid-column: 1/2; */
+  height: 1.1rem;
+  font-size: 1rem;
+  grid-column: 1/2;
+}
+.item-input {
+  grid-column: 2/3;
 }
 .btn-input-yes {
   grid-row: 1/2;
@@ -133,17 +145,44 @@ a.attribution:hover {
 }
 .item {
   display: grid;
-  margin: 2vh 0%;
+  margin-bottom: 2vh;
   grid-template-rows: 1;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 20px 2fr 2fr 1fr;
   gap: 10px;
   width: fit-content;
   background-color: white;
   border-radius: 5%;
   border-bottom: solid 1px transparent;
 }
+
+.due-date {
+  grid-row: 1/2;
+  grid-column: 3/4;
+}
 .item:hover {
   border-bottom: solid 1px rgb(237 236 235);
+}
+.complete-toggle {
+  margin-left: 0;
+  grid-column: 1/2;
+  grid-row: 1/2;
+  accent-color: rgb(237 236 235);
+}
+
+.complete {
+  text-decoration: line-through;
+  color: rgb(237 236 235);
+}
+.item-complete {
+  display: grid;
+  margin: 2vh 0%;
+  grid-template-rows: 1;
+  grid-template-columns: 20px 2fr 1fr;
+  gap: 10px;
+  width: fit-content;
+  background-color: white;
+  border-radius: 5%;
+  border-bottom: solid 1px transparent;
 }
 
 .btn-open {
@@ -185,6 +224,12 @@ a.attribution:hover {
   max-height: 110%;
   height: 1.1rem;
 }
+
+.item .edit-delete {
+  grid-column: 4/5;
+  grid-row: 1/2;
+}
+
 .edit {
   height: 1.1rem;
   width: 1.1rem;
@@ -205,6 +250,9 @@ a.attribution:hover {
   align-items: center;
   height: 1.1rem;
   width: 1.1rem;
+}
+.item-prop {
+  padding: 2%;
 }
 .item-prop-input .submit-cancel {
   grid-column: 5/6;
@@ -232,7 +280,7 @@ a.attribution:hover {
   min-width: fit-content;
   height: fit-content;
   gap: 10px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr 1fr;
   border: 1px solid lightgray;
   border-radius: 1%;
@@ -240,8 +288,12 @@ a.attribution:hover {
 
 .item-name {
   grid-row: 1/2;
-  grid-column: 1/2;
+  grid-column: 2/3;
 }
+.item-name:hover {
+  font-style: italic;
+}
+
 .item-date {
   grid-row: 1/2;
   grid-column: 2/3;
@@ -255,13 +307,13 @@ a.attribution:hover {
   grid-column: 1/2;
 }
 .low {
-  background-color: green;
+  color: green;
 }
 .medium {
-  background-color: orange;
+  color: orange;
 }
 .high {
-  background-color: red;
+  color: red;
 }
 
 .item-form {
