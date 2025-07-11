@@ -60,7 +60,11 @@ const controller = {
     this.linkObjProp(item, "description", desc);
   },
   linkItemDueDate(item, date) {
-    this.linkObjProp(item, "dueDate", format(new Date(date), "hh:mm dd LLL yyyy"));
+    if (date === "") {
+      this.linkObjProp(item, "dueDate", format(new Date(Date.now()), "hh:mm dd LLL yyyy"));
+    } else {
+      this.linkObjProp(item, "dueDate", format(new Date(date), "hh:mm dd LLL yyyy"));
+    }
   },
   linkItemPriority(item, priority) {
     this.linkObjProp(item, "priority", priority);
@@ -194,7 +198,7 @@ const eventListeners = {
     });
   },
   listenCloseItem() {
-    view.addGlobalEventListener("click", "close", (e) => {
+    view.addGlobalEventListener("click", "close-img", (e) => {
       view.deleteChildDivs(e.target.closest(".items"));
       view.displayItems(model.lists[this.activeList].items);
     });
@@ -219,25 +223,30 @@ const eventListeners = {
       localStorage.setItem("lists-local", JSON.stringify(model.lists));
     });
   },
-  listenEditName() {
+  listenEditData() {
     view.addGlobalEventListener("click", "edit-img", (e) => {
       let targetName = null;
       let type = null;
-      if (e.target.closest(".list")) {
-        type = "list";
-        targetName = e.target.closest(".list");
-        this.curName = model.lists[targetName.getAttribute("index")].name;
+
+      if (e.target.closest(".edit-close")) {
+        console.log("test");
       } else {
-        type = "item";
-        targetName = e.target.closest(".item");
-        this.curName = model.lists[this.activeList].items[targetName.getAttribute("index")].name;
+        if (e.target.closest(".list")) {
+          type = "list";
+          targetName = e.target.closest(".list");
+          this.curName = model.lists[targetName.getAttribute("index")].name;
+        } else {
+          type = "item";
+          targetName = e.target.closest(".item");
+          this.curName = model.lists[this.activeList].items[targetName.getAttribute("index")].name;
+        }
+        view.deleteChildDivs(targetName);
+        view.createListInput(targetName);
+        targetName.firstChild.value = this.curName;
+        targetName.firstChild.classList.add(`${type}-input`);
+        targetName.firstChild.focus();
+        view.createSubmitCancel(targetName);
       }
-      view.deleteChildDivs(targetName);
-      view.createListInput(targetName);
-      targetName.firstChild.value = this.curName;
-      targetName.firstChild.classList.add(`${type}-input`);
-      targetName.firstChild.focus();
-      view.createSubmitCancel(targetName);
     });
   },
   listenSubmitEdit() {
@@ -287,6 +296,7 @@ const eventListeners = {
       view.toggleStruckThrough(e.target.parentElement.querySelector(".due-date"));
     });
   },
+
   listenAll() {
     this.listenList();
     this.listenOpenForm();
@@ -296,7 +306,7 @@ const eventListeners = {
     this.listenOpenItem();
     this.listenCloseItem();
     this.listenDelete();
-    this.listenEditName();
+    this.listenEditData();
     this.listenSubmitEdit();
     this.listenCancelEdit();
     this.listenChecked();

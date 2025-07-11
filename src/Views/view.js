@@ -129,27 +129,27 @@ const view = {
     parent.firstChild.classList.add("complete-toggle");
   },
 
-  createImgBtn(div, className, imgName) {
+  createImgBtn(div, className, imgName, btnClass) {
     let image = document.createElement("img");
     image.src = imgName;
-    image.classList.add("edit-img");
+    image.classList.add(`${btnClass}-img`);
     div.classList.add(`${className}`);
     div.classList.add("hidden");
-    div.appendChild(this.createBtn("", "edit"));
+    div.appendChild(this.createBtn("", btnClass));
     div.lastChild.appendChild(image);
   },
 
   createEditDeleteBtn(parent) {
     createHoverListener(parent);
     let newDiv = parent.appendChild(this.createDiv());
-    this.createImgBtn(newDiv, "edit-delete", pencilImg);
+    this.createImgBtn(newDiv, "edit-delete", pencilImg, "edit");
     newDiv.appendChild(this.createBtn("X", "delete"));
   },
 
   createEditCloseButton(parent) {
     let newDiv = parent.appendChild(this.createDiv());
-    this.createImgBtn(newDiv, "edit-close", pencilImg);
-    this.createImgBtn(newDiv, "edit-close", minimizeImg);
+    this.createImgBtn(newDiv, "edit-close", pencilImg, "edit");
+    this.createImgBtn(newDiv, "edit-close", minimizeImg, "close");
     newDiv.classList.remove("hidden");
   },
   createListInput(parent) {
